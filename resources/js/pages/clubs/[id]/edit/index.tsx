@@ -11,40 +11,41 @@ import {
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
 import { clubs } from '@/routes';
+import { show } from '@/routes/clubs';
 import { type BreadcrumbItem } from '@/types';
+import { Club } from '@/types/club';
 import { Form, Head, Link } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Clubs',
-        href: clubs().url,
-    },
-    {
-        title: 'Create Club',
-        href: clubs().url,
-    },
-];
+interface PageProps {
+    club: Club;
+}
 
-export default function ClubsIndex() {
+export default function EditClubsIndex({ club }: PageProps) {
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: 'Clubs',
+            href: clubs().url,
+        },
+        {
+            title: club.name,
+            href: show(club.id).url,
+        },
+        {
+            title: 'Edit Club',
+            href: clubs().url,
+        },
+    ];
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Create Club" />
+            <Head title="Edit Club" />
             <div className="mx-auto w-full max-w-7xl p-4 md:p-8 lg:p-12">
                 <Heading
-                    title="Create Club"
+                    title="Edit Club"
                     description="Manage clubs and their teams from within this page"
                 />
 
-                {/* <Card>
-                    <CardHeader>
-                        <CardTitle>Adding New club</CardTitle>
-                        <CardDescription>
-                            Add all the information here for the new club.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent> */}
-                <Form {...ClubController.store.form()}>
+                <Form {...ClubController.update.form(club.id)}>
                     {({ processing, errors }) => (
                         <FieldGroup>
                             <Field>
@@ -54,7 +55,7 @@ export default function ClubsIndex() {
                                 <Input
                                     id="name"
                                     name="name"
-                                    placeholder="Lincoln Cannons"
+                                    defaultValue={club.name}
                                     required
                                 />
                                 <InputError message={errors.name} />
@@ -66,7 +67,7 @@ export default function ClubsIndex() {
                                 <Input
                                     id="venue"
                                     name="venue"
-                                    placeholder="123 Address Lane, Lincoln, LN6 6BW"
+                                    defaultValue={club.venue}
                                     required
                                 />
                                 <InputError message={errors.venue} />
@@ -79,7 +80,7 @@ export default function ClubsIndex() {
                                     <Input
                                         id="contact_name"
                                         name="contact_name"
-                                        placeholder="John Smith"
+                                        defaultValue={club.contact_name}
                                         required
                                     />
                                     <InputError message={errors.contact_name} />
@@ -91,7 +92,7 @@ export default function ClubsIndex() {
                                     <Input
                                         id="contact_email"
                                         name="contact_email"
-                                        placeholder="contact@lincolncannons.com"
+                                        defaultValue={club.contact_email}
                                         type="email"
                                         required
                                     />
@@ -106,7 +107,7 @@ export default function ClubsIndex() {
                                     <Input
                                         id="contact_number"
                                         name="contact_number"
-                                        placeholder="+44 7772456895"
+                                        defaultValue={club.contact_number}
                                         type="tel"
                                         required
                                     />
@@ -125,7 +126,7 @@ export default function ClubsIndex() {
                                     variant={'secondary'}
                                     asChild
                                 >
-                                    <Link href={clubs().url}>Back</Link>
+                                    <Link href={show(club.id).url}>Back</Link>
                                 </Button>
                                 <Button
                                     type="submit"
@@ -135,7 +136,7 @@ export default function ClubsIndex() {
                                     {processing && (
                                         <LoaderCircle className="h-4 w-4 animate-spin" />
                                     )}
-                                    Submit
+                                    Update
                                 </Button>
                             </Field>
                         </FieldGroup>

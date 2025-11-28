@@ -1,17 +1,11 @@
 'use client';
 
+import { Club } from '@/types/club';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Club = {
-    id: string;
-    name: string;
-    teams: number;
-    contact_name: string;
-    contact_email: string;
-};
 
 export const columns: ColumnDef<Club>[] = [
     {
@@ -47,5 +41,10 @@ export const columns: ColumnDef<Club>[] = [
     {
         accessorKey: 'teams',
         header: 'No of Teams',
+        cell: ({ row }) => {
+            return (
+                <span className="text-center">{row.original.teams_count}</span>
+            );
+        },
     },
 ];

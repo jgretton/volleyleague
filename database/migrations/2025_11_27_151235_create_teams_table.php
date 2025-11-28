@@ -8,19 +8,18 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     * 
      */
     public function up(): void
     {
-        Schema::create('clubs', function (Blueprint $table) {
+        Schema::create('teams', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->timestamps();
 
-            $table->string('name')->unique();
-            $table->string('venue');
-            $table->string('contact_name');
-            $table->string('contact_email');
-            $table->string('contact_number');
+            $table->string('name');
+            $table->foreignUuid('club_id')->constrained()->onDelete('cascade');
+            $table->enum('gender', ['Mens', 'Womens', 'Mixed']);
+
+            $table->unique(['name', 'gender']);
         });
     }
 
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clubs');
+        Schema::dropIfExists('teams');
     }
 };

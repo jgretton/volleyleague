@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreClubRequest extends FormRequest
 {
@@ -15,8 +16,9 @@ class StoreClubRequest extends FormRequest
      */
     public function rules(): array
     {
+        $clubId = $this->route('club')?->id;
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:clubs,name',],
+            'name' => ['required', 'string', 'max:255', Rule::unique('clubs')->ignore($clubId),],
             'venue' => ['required', 'string'],
             'contact_name' => ['required', 'string', 'max:255'],
             'contact_email' => ['required', 'email'],

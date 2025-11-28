@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreClubRequest;
 use App\Models\Club;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class ClubController extends Controller
@@ -15,7 +16,7 @@ class ClubController extends Controller
     public function index()
     {
         //
-        $clubs = Club::query()->orderBy('name')->get(['name','id','contact_name', 'contact_email']);
+        $clubs = Club::query()->orderBy('name')->withCount('teams')->get(['name','id','contact_name', 'contact_email']);
         return Inertia::render('clubs/index',[
             'clubs' => $clubs
         ]);
@@ -36,6 +37,7 @@ class ClubController extends Controller
     public function store(StoreClubRequest $request)
     {
         $club = Club::create([
+            'id'=> Str::uuid(),
             'name' => $request->name,
             'venue' => $request->venue,
             'contact_name' => $request->contact_name,
@@ -51,8 +53,12 @@ class ClubController extends Controller
      * Display the specified resource.
      */
     public function show(Club $club)
+    
     {
-        //
+        return Inertia::render('clubs/[id]/index', [
+            'club' => $club,
+            'teams' => $club->teams
+        ]);
     }
 
     /**
@@ -60,15 +66,26 @@ class ClubController extends Controller
      */
     public function edit(Club $club)
     {
-        //
+          return Inertia::render('clubs/[id]/edit/index', [
+            'club' => $club,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Club $club)
+    public function update(StoreClubRequest $request, Club $club)
     {
         //
+        try{
+            $club->update($request->validated());
+            return redirect()->route('clubs.show', $club->id)->with('success', 'Club updated successfully');
+        }
+        catch(\Exception $e)
+        {
+            return redirect()->back()->with('error', 'Failed to update Club, try again.');
+        }
+
     }
 
     /**
@@ -77,5 +94,13 @@ class ClubController extends Controller
     public function destroy(Club $club)
     {
         //
+          try{
+            $club->delete();
+        return redirect()->route('clubs')->with('success', 'Club deleted successfully');
+        }
+                catch(\Exception $e)
+        {
+            return redirect()->back()->with('error', 'Failed to delete team, please try again. If this error continues please contact support' );
+        }
     }
 }
