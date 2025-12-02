@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ClubController;
 use App\Http\Controllers\LeagueController;
+use App\Http\Controllers\SeasonController;
 use App\Http\Controllers\TeamController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -39,6 +40,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('leagues', [LeagueController::class, 'store'])->name('leagues.store');
 
     Route::get('leagues/{league}', [LeagueController::class, 'show'])->name('leagues.show');
+    Route::put('leagues/{season}', [SeasonController::class, 'addTeam'])->name('leagues.addteam');
 
 });
 

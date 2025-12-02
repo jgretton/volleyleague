@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreLeagueRequest;
 use App\Models\League;
 use App\Models\Season;
+use App\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -73,8 +74,13 @@ class LeagueController extends Controller
     public function show(League $league)
     {
         //
+        $seasons = Season::where('league_id', $league->id)->with('teams')->get();
+        $teams = Team::where('gender', $league->gender)->get(['name', 'id', 'gender']);
+
         return Inertia::render('leagues/[id]/index', [
             'league' => $league,
+            'seasons' => $seasons,
+            'teams' => $teams,
         ]);
     }
 

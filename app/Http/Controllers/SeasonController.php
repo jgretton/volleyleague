@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddTeamToSeasonRequest;
 use App\Models\Season;
 use Illuminate\Http\Request;
 
@@ -61,5 +62,20 @@ class SeasonController extends Controller
     public function destroy(Season $season)
     {
         //
+    }
+
+    public function addTeam(AddTeamToSeasonRequest $request, Season $season)
+    {
+        //
+        $validated = $request->validated();
+        try {
+            $season->teams()->attach($validated['team_ids']);
+
+            return redirect()->back()->with('success', 'Success, the league has been updated.');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to add teans to the league, try again.');
+        }
+
     }
 }

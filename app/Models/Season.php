@@ -17,8 +17,8 @@ class Season extends Model
 
     }
 
-    // public function teams(): BelongsToMany
-    // {
-
-    // }
+    public function teams(): BelongsToMany
+    {
+        return $this->belongsToMany(Team::class, 'season_teams');
+    }
 }
