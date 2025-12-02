@@ -14,3 +14,9 @@ export interface Team {
     gender: string;
     club_id: string;
 }
+
+export interface League {
+    name: string;
+    gender: string;
+    id: string;
+}
